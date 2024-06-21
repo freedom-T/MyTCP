@@ -11,10 +11,16 @@ void DUMMY_CODE(Targs &&... /* unused */) {}
 
 using namespace std;
 
-//! Transform an "absolute" 64-bit sequence number (zero-indexed) into a WrappingInt32
-//! \param n The input absolute 64-bit sequence number
-//! \param isn The initial sequence number
-WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
+//! 将一个“绝对”的64位序列号（从零开始索引）转换为WrappingInt32
+//! \param n 输入的绝对64位序列号
+//! \param isn 初始序列号
+
+/*
+函数功能：将一个64位的绝对序列号与一个32位的初始序列号相加，然后返回这个新的 WrappingInt32 对象
+用于处理TCP协议中的序列号环绕问题
+*/
+WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) 
+{
     uint32_t number = isn.raw_value() + static_cast<uint32_t>(n);
     return WrappingInt32{number};
 }
