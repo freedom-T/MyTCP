@@ -7,8 +7,8 @@
 
 using namespace std;
 
-//! \param[in] buffer string/Buffer to be parsed
-//! \param[in] datagram_layer_checksum pseudo-checksum from the lower-layer protocol
+//! \param[in] buffer string/Buffer to be parsed 要被转化的数据
+//! \param[in] datagram_layer_checksum pseudo-checksum from the lower-layer protocol 来自下层协议的伪校验和
 ParseResult TCPSegment::parse(const Buffer buffer, const uint32_t datagram_layer_checksum) {
     InternetChecksum check(datagram_layer_checksum);
     check.add(buffer);

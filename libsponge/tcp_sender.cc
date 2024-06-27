@@ -14,8 +14,11 @@ void DUMMY_CODE(Targs &&... /* unused */) {}
 using namespace std;
 
 //! \param[in] capacity the capacity of the outgoing byte stream
+//! 传出字节流的容量
 //! \param[in] retx_timeout the initial amount of time to wait before retransmitting the oldest outstanding segment
+//! 重新传输最之前的未完成段要等待的初始时间
 //! \param[in] fixed_isn the Initial Sequence Number to use, if set (otherwise uses a random ISN)
+//! 如果设置，则使用初始序列号（否则使用随机 ISN）
 TCPSender::TCPSender(const size_t capacity, const uint16_t retx_timeout, const std::optional<WrappingInt32> fixed_isn)
     : _isn(fixed_isn.value_or(WrappingInt32{random_device()()}))
     , _initial_retransmission_timeout{retx_timeout}
@@ -26,10 +29,12 @@ uint64_t TCPSender::bytes_in_flight() const { return _next_seqno - _last_ackno; 
 void TCPSender::fill_window() {
     TCPSegment seg;
 
+    //！ 建立新的连接
     if (next_seqno_absolute() == 0) {
         seg.header().syn = true;
         send_segment(seg);
         return;
+        
     } else if (next_seqno_absolute() > 0 && next_seqno_absolute() == bytes_in_flight()) {
         return;
     }
