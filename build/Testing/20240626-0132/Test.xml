@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="(empty)"
+	BuildStamp="20240626-0132-Experimental"
+	Name="(empty)"
+	Generator="ctest-3.3.2"
+	CompilerName=""
+	OSName="Linux"
+	Hostname="server01"
+	OSRelease="3.10.0-1160.el7.x86_64"
+	OSVersion="#1 SMP Mon Oct 19 16:18:59 UTC 2020"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="AuthenticAMD"
+	VendorID="Advanced Micro Devices"
+	FamilyID="25"
+	ModelID="80"
+	ProcessorCacheSize="512"
+	NumberOfLogicalCPU="4"
+	NumberOfPhysicalCPU="4"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="1819"
+	LogicalProcessorsPerPhysical="1"
+	ProcessorClockFrequency="3194"
+	>
+	<Testing>
+		<StartDateTime>Jun 26 22:01 CST</StartDateTime>
+		<StartTestTime>1719410475</StartTestTime>
+		<TestList/>
+		<EndDateTime>Jun 26 22:01 CST</EndDateTime>
+		<EndTestTime>1719410475</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

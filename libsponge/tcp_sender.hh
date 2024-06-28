@@ -67,7 +67,7 @@ class TCPSender {
     std::queue<TCPSegment> _segments_out{};
 
     //! retransmission timer for the connection
-    //! 此连接的重传定时器
+    //! 此连接的重传定时器的时间
     unsigned int _initial_retransmission_timeout;
 
     //! outgoing stream of bytes that have not yet been sent
