@@ -61,5 +61,6 @@ optional<WrappingInt32> TCPReceiver::ackno() const
 // 函数功能：计算TCP接收器当前的窗口大小
 size_t TCPReceiver::window_size() const 
 { 
+    // 窗口大小为第一个不可以接受的索引位置  减去  第一个未重组的索引位置
     return _reassembler.first_unacceptable() - _reassembler.first_unassembled(); 
 }

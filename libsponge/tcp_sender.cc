@@ -2,31 +2,32 @@
 
 #include "tcp_config.hh"
 
+// 头文件用处：生成随机数
 #include <random>
-// Dummy implementation of a TCP sender
+// 一个TCP发送器的虚拟实现
 
-// For Lab 3, please replace with a real implementation that passes the
-// automated checks run by `make check_lab3`.
-
+// 请为实验3替换为可以通过make check_lab3运行的自动化测试的真实实现。
 template <typename... Targs>
 void DUMMY_CODE(Targs &&... /* unused */) {}
 
 using namespace std;
 
-//! \param[in] capacity the capacity of the outgoing byte stream
-//! 传出字节流的容量
-//! \param[in] retx_timeout the initial amount of time to wait before retransmitting the oldest outstanding segment
-//! 重新传输最之前的未完成段要等待的初始时间
-//! \param[in] fixed_isn the Initial Sequence Number to use, if set (otherwise uses a random ISN)
-//! 如果设置，则使用初始序列号（否则使用随机 ISN）
+// 传出字节流的容量
+// 重新传输最之前的未完成段要等待的初始时间
+// 如果设置，则使用初始序列号（否则使用随机 ISN）
 TCPSender::TCPSender(const size_t capacity, const uint16_t retx_timeout, const std::optional<WrappingInt32> fixed_isn)
     : _isn(fixed_isn.value_or(WrappingInt32{random_device()()}))
     , _initial_retransmission_timeout{retx_timeout}
     , _stream(capacity) {}
 
+
+// 函数功能：返回当前发送方在网络中保留的字节数
 uint64_t TCPSender::bytes_in_flight() const { return _next_seqno - _last_ackno; }
 
-void TCPSender::fill_window() {
+
+// 函数功能：填充发送窗口
+void TCPSender::fill_window() 
+{
     TCPSegment seg;
 
     //！ 建立新的连接
@@ -36,7 +37,9 @@ void TCPSender::fill_window() {
         send_segment(seg);
         return;
         
-    } else if (next_seqno_absolute() > 0 && next_seqno_absolute() == bytes_in_flight()) {
+    } 
+    else if (next_seqno_absolute() > 0 && next_seqno_absolute() == bytes_in_flight()) 
+    {
         // 如果接下来要发送的数据序列等于已发送待确认，说明已经发送过数据且还在飞行中。
         // 即_last_ackno （上次接受到的回应序号）不等于0
         return;
@@ -49,9 +52,11 @@ void TCPSender::fill_window() {
     size_t remaining_win = cur_win - bytes_in_flight();
 
     // 循环填充窗口
-    while ((remaining_win = cur_win - bytes_in_flight())) {
+    while ((remaining_win = cur_win - bytes_in_flight())) 
+    {
         // 如果流没有结束且还有未发送的数据
-        if (!stream_in().eof() && next_seqno_absolute() > bytes_in_flight()) {
+        if (!stream_in().eof() && next_seqno_absolute() > bytes_in_flight()) 
+        {
             // 根据窗口大小，调整发送的数据大小
             size_t payload_size = min(TCPConfig::MAX_PAYLOAD_SIZE, remaining_win);
             seg.payload() = Buffer(stream_in().read(payload_size));
@@ -64,9 +69,12 @@ void TCPSender::fill_window() {
                 return;
             // 发送
             send_segment(seg);
-        } else if (stream_in().eof()) {
+        } 
+        else if (stream_in().eof()) 
+        {
             // 在流结束时，所有的字节都已写入，设置fin标识位
-            if (next_seqno_absolute() < stream_in().bytes_written() + 2) {
+            if (next_seqno_absolute() < stream_in().bytes_written() + 2) 
+            {
                 seg.header().fin = true;
                 send_segment(seg);
                 return;
@@ -76,10 +84,8 @@ void TCPSender::fill_window() {
     }
 }
 
-//! \param ackno The remote receiver's ackno (acknowledgment number) 
-//! 远程接收方的确认号
-//! \param window_size The remote receiver's advertised window size
-//! 远程接收方公布的窗口大小
+// 远程接收方的确认号
+// 远程接收方公布的窗口大小
 void TCPSender::ack_received(const WrappingInt32 ackno, const uint16_t window_size) {
     uint64_t abs_ack = unwrap(ackno, _isn, _last_ackno);
     //解包出绝对确认号
@@ -118,7 +124,7 @@ void TCPSender::ack_received(const WrappingInt32 ackno, const uint16_t window_si
     fill_window();
 }
 
-//! \param[in] ms_since_last_tick the number of milliseconds since the last call to this method
+
 // 自上次调用此方法以来的毫秒数
 void TCPSender::tick(const size_t ms_since_last_tick) {
     // 判断是否超时
@@ -139,6 +145,7 @@ void TCPSender::tick(const size_t ms_since_last_tick) {
         _timer.stop();
 }
 
+
 // 返回连续重传次数
 unsigned int TCPSender::consecutive_retransmissions() const { return _retransmission_count; }
 
@@ -153,6 +160,7 @@ void TCPSender::send_segment(TCPSegment &seg) {
         _timer.start(_RTO);
     }
 }
+
 
 // 发送空数据段
 void TCPSender::send_empty_segment() {

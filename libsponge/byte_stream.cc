@@ -1,11 +1,5 @@
 #include "byte_stream.hh"
 
-// Dummy implementation of a flow-controlled in-memory byte stream.
-
-// For Lab 0, please replace with a real implementation that passes the
-// automated checks run by `make check_lab0`.
-
-// You will need to add private members to the class declaration in `byte_stream.hh`
 
 
 // 这是一个虚拟实现的内存中流控制的字节流。
@@ -25,10 +19,11 @@ Targs &&... 表示参数包展开,表示可以接受零个或多个右值引用�
  unused 表示这些参数在函数体内部没有被使用
 */
 
-using namespace std;
-
 // 通过 DUMMY_CODE 函数进行占位  这个的目的和Python中的函数实现是pass一样
 // ByteStream::ByteStream(const size_t capacity) { DUMMY_CODE(capacity); }
+
+
+using namespace std;
 
 
 
@@ -70,6 +65,7 @@ size_t ByteStream::write(const string &data)
 
 
 // \param[in] len 字节将从缓冲区的输出端复制
+// read 函数中进行调用
 string ByteStream::peek_output(const size_t len) const 
 {
     // 计算实际可以查看的字节数，即 len 和当前缓冲区中的字节数量的较小值
@@ -83,6 +79,7 @@ string ByteStream::peek_output(const size_t len) const
 
 
 //! \param[in] len 字节将从缓冲区的输出端移除
+// read 函数中进行调用
 void ByteStream::pop_output(const size_t len) 
 {
     // 计算实际可以弹出的字节数，即 len 和当前缓冲区中的字节数量的较小值
@@ -117,6 +114,9 @@ std::string ByteStream::read(const size_t len) {
     // 返回复制到 r 的字节数据
     return r;
 }
+
+
+
 
 
 

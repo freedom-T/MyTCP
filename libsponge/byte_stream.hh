@@ -9,21 +9,12 @@
 //! \brief An in-order byte stream.
 // \brief 一个按顺序的字节流。
 
-//! Bytes are written on the "input" side and read from the "output"
-//! side.  The byte stream is finite: the writer can end the input,
-//! and then no more bytes can be written.
 
 //！字节被写入“输入”端并从“输出”端读取。
 //！字节流是有限的：写入者可以结束输入，之后就不能再写入更多字节了。
 
 class ByteStream {
   private:
-    // Your code here -- add private members as necessary.
-
-    // Hint: This doesn't need to be a sophisticated data structure at
-    // all, but if any of your tests are taking longer than a second,
-    // that's a sign that you probably want to keep exploring
-    // different approaches.
 
     // 在这里添加你的代码——根据需要添加私有成员。
     // 提示：这并不需要一个复杂的数据结构，
@@ -31,13 +22,12 @@ class ByteStream {
     // 这表明你可能希望继续探索不同的方法。
 
 
-
     std::deque<char> _buff; // 使用标准库中的双端队列（deque），存储字符类型的数据，用作字节流的缓冲区
     size_t capacity; // 保存缓冲区的容量，即可以存储的最大字节数量
     size_t bytes_r; // 记录已经读取的字节数量
-    size_t bytes_w; // 记录已经写入的字节数量。
+    size_t bytes_w; // 记录已经写入的字节数量
     bool _end_input; // 表示输入端是否已经结束的标志。如果为真，则表示不再接受新的输入字节
-    bool _error{};  // 标志表明流发生了错误。
+    bool _error{};  // 标志表明流发生了错误
     /*
     表示流是否发生错误的标志。默认初始化为假（false），表示没有发生错误。
     这些成员变量一起组成了一个简单的字节流管理结构
@@ -83,20 +73,19 @@ class ByteStream {
 
     // \returns a string
     // 字节将从缓冲区的输出端复制
-    std::string peek_output(const size_t len) const;
-
+    std::string peek_output(const size_t len) const; // read 函数中进行调用
 
     // 从缓冲区中移除字节
-    void pop_output(const size_t len);
-
+    void pop_output(const size_t len); // read 函数中进行调用
 
     // 读取（即复制然后弹出）流的下一个 "len" 字节
-    //! \returns a string
     std::string read(const size_t len);
+
 
 
     // 如果流的输入已经结束则返回 true
     bool input_ended() const;
+
 
 
     // 如果流发生了错误则返回 true

@@ -38,7 +38,7 @@ void StreamReassembler::_buf_erase(const set<Segment>::iterator &iter)
 }
 
 
-// 函数功能：向缓冲区插入字符串
+// 函数功能：向未组装片段缓冲区中插入字符串
 void StreamReassembler::_buf_insert(const Segment &seg) 
 {
     _unassembled_bytes += seg.length();  // 将片段的长度加到未组装字节数中
@@ -46,8 +46,8 @@ void StreamReassembler::_buf_insert(const Segment &seg)
 }
 
 
-///! \details 该函数接受来自逻辑流的一个子字符串（也称为片段），可能是无序的，
-//! 并组装任何新的连续子字符串，将它们按顺序写入输出流。
+// 该函数接受来自逻辑流的一个子字符串（也称为片段），可能是无序的，
+// 并组装任何新的连续子字符串，将它们按顺序写入输出流。
 
 // 函数功能：将子字符串 data 推入流中，将其传递给流重新组装器
 void StreamReassembler::push_substring(const string &data, const size_t index, const bool eof) 
@@ -69,7 +69,7 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
     {
         const auto &iter = _buf.begin();
         _output.write(iter->_data);
-        _buf_erase(iter);  // 从缓冲区中移除已写入的片段
+        _buf_erase(iter);  // 从缓冲区中移除已写入到字节流中的片段
     }
 
     // 如果到达了流的末尾并且所有数据都已重新组装，则结束输入并清空缓冲区
@@ -80,7 +80,7 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
     }
 }
 
-// 函数功能：处理子字符串
+// 函数功能：处理子字符串，将字符串插入到集合set未组装的集合中
 void StreamReassembler::_handle_substring(Segment &seg) 
 {
     // 共分为3种情况：
@@ -89,13 +89,17 @@ void StreamReassembler::_handle_substring(Segment &seg)
     // 3.都在范围内
     const size_t index = seg._idx;
 
-    // 情况1：丢弃
+    // 情况1：丢弃、
+    // 如果该片段索引值已经 大于 不可接收的索引值，return
+    // 片段结尾的索引值 小于 字节流当前末尾的索引值，return 
     if (index >= first_unacceptable() || seg.tail_idx() < first_unassembled())
         return;
+
 
     // 情况2：截断
     // 如果片段开始索引小于第一个未组装的字节，且片段的尾部索引大于等于第一个未组装的字节
     // 则截取片段数据，使其开始于第一个未组装的字节
+    // 前边包重复所以截取
     if (index < first_unassembled() && seg.tail_idx() >= first_unassembled()) 
     {
         seg._data = seg._data.substr(first_unassembled() - index);
@@ -106,6 +110,7 @@ void StreamReassembler::_handle_substring(Segment &seg)
     if (index < first_unacceptable() && seg.tail_idx() >= first_unacceptable())
         seg._data = seg._data.substr(0, first_unacceptable() - index);
 
+
     // 情况3：将片段插入到缓冲区中，如果缓冲区为空则直接插入
     if (_buf.empty()) 
     {
@@ -113,7 +118,7 @@ void StreamReassembler::_handle_substring(Segment &seg)
         return;
     }
 
-    // 处理重叠部分
+    // 插入后，对set集合进行处理，处理重叠部分
     _handle_overlap(seg);
 }
 

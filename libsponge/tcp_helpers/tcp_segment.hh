@@ -11,6 +11,8 @@
 class TCPSegment {
   private:
     TCPHeader _header{};
+
+    //! 报文的有效载荷
     Buffer _payload{};
 
   public:

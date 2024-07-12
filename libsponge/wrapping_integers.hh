@@ -6,18 +6,21 @@
 #include <ostream>
 #include <random>
 
-//! \brief A 32-bit integer, expressed relative to an arbitrary initial sequence number (ISN)
-//! \note This is used to express TCP sequence numbers (seqno) and acknowledgment numbers (ackno)
+// 一个 32 位整数，相对于任意初始序列号 (ISN) 表示
+// 用于表示 TCP 序列号 (seqno) 和确认号 (ackno)
 class WrappingInt32 {
-  private:
-    uint32_t _raw_value;  //!< The raw 32-bit stored integer
+private:
+  // 使用无符号 32 位整数 '_raw_value' 来存储原始数据值
+  uint32_t _raw_value;  
 
-  public:
-    //! Construct from a raw 32-bit unsigned integer
-    explicit WrappingInt32(uint32_t raw_value) : _raw_value(raw_value) {}
+public:
+  
+  explicit WrappingInt32(uint32_t raw_value) : _raw_value(raw_value) {}
 
-    uint32_t raw_value() const { return _raw_value; }  //!< Access raw stored value
+ 
+  uint32_t raw_value() const { return _raw_value; }  
 };
+
 
 //! Transform a 64-bit absolute sequence number (zero-indexed) into a 32-bit relative sequence number
 //! \param n the absolute sequence number
